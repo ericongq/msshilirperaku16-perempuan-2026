@@ -1,0 +1,1656 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MSS Hilir Perak 2026 • Perempuan Bawah 16 Livescore & Standings</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,600;0,700;1,700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Chakra Petch', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            arena: {
+              bg: '#090b12',
+              card: '#111625',
+              elevated: '#1b2338',
+              border: '#232c42',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #090b12;
+      color: #f8fafc;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #090b12;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #232c42;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #374151;
+    }
+    @keyframes pulse-live {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.9); }
+    }
+    .animate-live-dot {
+      animation: pulse-live 1.5s infinite ease-in-out;
+    }
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-rose-500 selection:text-white">
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- Top Utility & Quick Actions Bar -->
+  <div class="bg-[#05070c] border-b border-arena-border px-4 py-2">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-xs">
+      <div class="flex flex-wrap items-center gap-2 sm:gap-3 text-slate-400">
+        <span class="inline-flex items-center gap-1.5 font-bold text-rose-400 tracking-wide">
+          <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+          PEREMPUAN BAWAH 16 TAHUN (KUMP. P)
+        </span>
+        <span class="hidden sm:inline text-slate-700">|</span>
+        <span id="sync-status-badge" class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-slate-300 font-mono text-[11px] font-bold">
+          <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+          CONNECTING...
+        </span>
+        <span class="hidden md:inline text-slate-700">|</span>
+        <span class="hidden md:inline" id="league-summary-badge">Tarikh: 24/11/2026 • Glg. SPEEDY • 6 Perlawanan</span>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2">
+        <!-- Points System Selector (Organizer Only) -->
+        <div class="organizer-only flex items-center gap-1.5 bg-arena-card px-2.5 py-1 rounded-lg border border-arena-border">
+          <span class="text-slate-400">Mata:</span>
+          <select id="points-rule-select" onchange="updatePointsRule(this.value)"
+            class="bg-transparent font-semibold text-slate-200 focus:outline-none cursor-pointer">
+            <option value="fiba" class="bg-arena-card">FIBA (Menang: 2, Kalah: 1)</option>
+            <option value="standard" class="bg-arena-card">Standard (Menang: 2, Kalah: 0)</option>
+            <option value="three" class="bg-arena-card">3-Pt Win (Menang: 3, Kalah: 1)</option>
+          </select>
+        </div>
+
+        <button onclick="openPinModal()" id="organizer-pin-btn" class="organizer-only px-2.5 py-1 rounded-lg bg-arena-card hover:bg-arena-elevated text-slate-200 border border-arena-border transition flex items-center gap-1 font-medium">
+          <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          <span id="organizer-pin-btn-text">Set Organizer PIN</span>
+        </button>
+
+        <button onclick="exportLeagueCSV()" class="px-2.5 py-1 rounded-lg bg-arena-card hover:bg-arena-elevated text-slate-200 border border-arena-border transition flex items-center gap-1 font-medium">
+          <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          <span>Export CSV</span>
+        </button>
+
+        <button onclick="resetAllScores()" class="organizer-only px-2.5 py-1 rounded-lg bg-arena-card hover:bg-rose-500/20 text-slate-200 hover:text-rose-300 border border-arena-border transition font-medium">
+          Reset Keputusan
+        </button>
+
+        <button onclick="loadOfficialSchedule()" class="organizer-only px-2.5 py-1 rounded-lg bg-arena-card hover:bg-amber-500/20 text-slate-200 hover:text-amber-300 border border-arena-border transition font-medium">
+          Reset Jadual Rasmi
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Locked Spectator Banner (Shown only when ?view=spectator or #spectator) -->
+  <div id="locked-spectator-banner" class="hidden bg-emerald-950/85 border-b border-emerald-500/35 px-4 py-2">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-xs">
+      <div class="flex items-center gap-2 text-emerald-300 font-bold tracking-wide">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-live-dot"></span>
+        <span>VIEW-ONLY LIVE FEED • READ ONLY (PAPARAN PENGURUS & PENONTON)</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span id="last-updated-label" class="text-[11px] text-emerald-400/80 font-mono">Auto-Sync Aktif</span>
+        <button onclick="manualRefreshSync()" class="px-2.5 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-200 font-bold transition flex items-center gap-1">
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          <span>Refresh</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Organizer Preview Banner (Shown when organizer temporarily previews spectator view) -->
+  <div id="preview-spectator-banner" class="hidden bg-rose-500/15 border-b border-rose-500/40 px-4 py-2">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-2 text-xs">
+      <span class="text-rose-300 font-bold">Pratonton Paparan Penonton (Preview Spectator View) — Butang kawalan skor disembunyikan sementara.</span>
+      <button onclick="setViewMode('organizer')" class="px-3 py-1 rounded-lg bg-rose-500 hover:bg-rose-400 text-white font-extrabold transition">
+        Exit Preview
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Header Bar -->
+  <header class="bg-arena-card/95 backdrop-blur-md border-b border-arena-border sticky top-0 z-30 shadow-xl">
+    <div class="max-w-7xl mx-auto px-4 py-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3">
+      <!-- League Title & Venue -->
+      <div class="flex items-center gap-3 min-w-0 flex-1">
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-rose-500 via-pink-600 to-amber-500 flex items-center justify-center shadow-lg shadow-rose-500/25 shrink-0">
+          <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M5.65 5.65c3.9 3.9 3.9 8.8 0 12.7"/>
+            <path d="M18.35 5.65c-3.9 3.9-3.9 8.8 0 12.7"/>
+            <line x1="2" y1="12" x2="22" y2="12"/>
+            <line x1="12" y1="2" x2="12" y2="22"/>
+          </svg>
+        </div>
+        <div class="min-w-0 flex-1">
+          <input id="league-title-input" type="text"
+            onchange="updateMeta('title', this.value)"
+            class="bg-transparent font-display font-bold text-lg sm:text-2xl text-white uppercase tracking-wide focus:outline-none focus:bg-arena-elevated focus:px-2 rounded transition w-full truncate"
+            title="Click to edit League Title" />
+          <div class="flex items-center gap-1.5 text-xs text-slate-400 mt-0.5">
+            <svg class="w-3.5 h-3.5 text-rose-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <input id="league-venue-input" type="text"
+              onchange="updateMeta('venue', this.value)"
+              class="bg-transparent text-slate-400 focus:text-white focus:outline-none focus:bg-arena-elevated focus:px-1.5 rounded transition w-full max-w-xl"
+              title="Click to edit Venue / Court" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Share Spectator Link & Mode Switcher (Hidden in Locked Spectator URL mode) -->
+      <div id="header-controls-area" class="flex flex-wrap items-center justify-between md:justify-end gap-2.5">
+        <button onclick="openShareModal()"
+          class="organizer-only px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 text-xs font-extrabold shadow-lg shadow-emerald-500/20 transition flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+          <span>Share Spectator Link</span>
+        </button>
+
+        <div id="mode-switcher-pill" class="flex items-center bg-arena-bg p-1 rounded-xl border border-arena-border">
+          <button onclick="setViewMode('organizer')" id="mode-btn-organizer"
+            class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5">
+            <span>Organizer</span>
+          </button>
+          <button onclick="setViewMode('spectator')" id="mode-btn-spectator"
+            class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5">
+            <span>Preview Spectator View</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 space-y-8">
+
+    <!-- ===================================================================== -->
+    <!-- SECTION 1: LIVE 4-TEAM LEAGUE STANDINGS TABLE (PRIMARY FOCAL POINT)   -->
+    <!-- ===================================================================== -->
+    <section>
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-1.5 h-6 rounded-full bg-rose-500"></div>
+          <h2 class="font-display font-bold text-xl sm:text-2xl text-white tracking-wide">KEDUDUKAN LIGA • PEREMPUAN BAWAH 16</h2>
+          <span class="text-xs px-2.5 py-0.5 rounded-full bg-rose-500/15 border border-rose-500/35 text-rose-300 font-semibold">
+            Live Standings
+          </span>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="toggleRosterEditor()" id="toggle-roster-btn"
+            class="organizer-only px-3.5 py-1.5 rounded-xl bg-arena-elevated hover:bg-slate-700 border border-arena-border text-xs font-bold text-rose-300 transition flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+            <span>Edit 4 Sekolah (P1–P4)</span>
+          </button>
+          <button onclick="loadOfficialSchedule()"
+            class="organizer-only px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-400 hover:to-amber-400 text-white text-xs font-extrabold shadow transition">
+            Reset Jadual Rasmi (Bil. 1–6)
+          </button>
+        </div>
+      </div>
+
+      <!-- Inline 4-Team Roster Editor Drawer (Collapsible in Organizer Mode) -->
+      <div id="roster-editor-panel" class="organizer-only hidden mb-4 bg-arena-card border border-rose-500/35 rounded-2xl p-4 shadow-xl">
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <h3 class="font-display font-bold text-sm uppercase tracking-wider text-rose-400">Senarai Pasukan Perempuan Bawah 16 (P1–P4)</h3>
+            <p class="text-xs text-slate-400">Kemaskini kod pasukan, nama sekolah, atau warna jersi. Jadual & kedudukan dikemaskini secara automatik.</p>
+          </div>
+          <button onclick="toggleRosterEditor()" class="text-xs text-slate-400 hover:text-white px-2.5 py-1 rounded-lg bg-arena-elevated">Selesai</button>
+        </div>
+        <div id="roster-editor-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <!-- 4 team editor cards injected dynamically -->
+        </div>
+      </div>
+
+      <!-- Standings Table Card -->
+      <div class="bg-arena-card rounded-2xl border border-arena-border shadow-2xl overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-arena-border text-[11px] font-bold uppercase tracking-wider text-slate-400 bg-[#0d1220]">
+                <th class="py-3.5 pl-4 pr-2 w-14 text-center">POS</th>
+                <th class="py-3.5 px-2.5 w-20 text-center">CODE</th>
+                <th class="py-3.5 px-3">SEKOLAH / PASUKAN</th>
+                <th class="py-3.5 px-3 text-center" title="Games Played (LIVE & FINAL)">GP</th>
+                <th class="py-3.5 px-3 text-center" title="Menang (Wins)">W</th>
+                <th class="py-3.5 px-3 text-center" title="Kalah (Losses)">L</th>
+                <th class="py-3.5 px-3 text-center text-slate-200" title="Jumlah Mata Dijaringkan (Marks Scored)">PF</th>
+                <th class="py-3.5 px-3 text-center text-slate-200" title="Jumlah Mata Bolos (Marks Against)">PA</th>
+                <th class="py-3.5 px-3 text-center" title="Beza Mata (PF - PA)">DIFF</th>
+                <th class="py-3.5 px-4 text-center text-amber-400" title="Mata Liga (League Points)">PTS</th>
+              </tr>
+            </thead>
+            <tbody id="standings-tbody" class="divide-y divide-arena-border/70 text-sm">
+              <!-- 4 team standings rows injected dynamically -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Legend & Tie-Breaker Info Footer -->
+        <div class="px-4 py-2.5 bg-[#0d1220] border-t border-arena-border flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-400">
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
+            <span class="inline-flex items-center gap-1.5 text-amber-400 font-semibold">
+              <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+              #1–#2 Podium / Layak Akhir
+            </span>
+            <span><strong class="text-slate-200">GP</strong> = Perlawanan</span>
+            <span><strong class="text-slate-200">PF</strong> = Mata Dijaringkan</span>
+            <span><strong class="text-slate-200">PA</strong> = Mata Bolos</span>
+            <span><strong class="text-slate-200">DIFF</strong> = PF - PA</span>
+          </div>
+          <div class="text-slate-400" title="Tie-breakers apply automatically when teams share equal League Points">
+            <span class="text-slate-500">Tie-Breaker:</span>
+            <strong class="text-slate-300">PTS → DIFF → PF → Head-to-Head</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- SECTION 2: OFFICIAL CHRONOLOGICAL SCHEDULE (BIL. 1 TO 6)              -->
+    <!-- ===================================================================== -->
+    <section>
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+        <div class="flex items-center gap-2.5">
+          <div class="w-1.5 h-6 rounded-full bg-amber-500"></div>
+          <h2 class="font-display font-bold text-xl sm:text-2xl text-white tracking-wide">JADUAL PERLAWANAN & KEPUTUSAN (BIL. 1–6)</h2>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <!-- Status Filter Pills -->
+          <div id="status-filter-pills" class="flex items-center bg-arena-card p-1 rounded-xl border border-arena-border">
+            <!-- Injected dynamically with counts -->
+          </div>
+
+          <!-- Optional Add Custom Match Button -->
+          <button onclick="openCustomMatchModal()"
+            class="organizer-only px-3.5 py-2 rounded-xl bg-arena-elevated hover:bg-slate-700 border border-arena-border text-xs font-bold text-slate-200 transition">
+            + Tambah Perlawanan / Akhir
+          </button>
+        </div>
+      </div>
+
+      <!-- Chronological Matches Container -->
+      <div id="matches-container" class="space-y-4">
+        <!-- Chronological match cards injected dynamically -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL: Add Custom Match -->
+  <div id="custom-match-modal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-arena-card border border-arena-border rounded-2xl max-w-md w-full p-6 shadow-2xl">
+      <h3 class="font-display font-bold text-xl text-white mb-1">Tambah Perlawanan Tambahan / Akhir</h3>
+      <p class="text-xs text-slate-400 mb-4">Jadualkan perlawanan tambahan antara dua pasukan Perempuan Bawah 16.</p>
+      <div class="space-y-4">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Pasukan A (Home)</label>
+            <select id="custom-match-home" class="w-full bg-arena-bg border border-arena-border rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-rose-500"></select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Pasukan B (Away)</label>
+            <select id="custom-match-away" class="w-full bg-arena-bg border border-arena-border rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-rose-500"></select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Masa & Gelanggang</label>
+            <input id="custom-match-court" type="text" value="14:00 • Glg. SPEEDY" class="w-full bg-arena-bg border border-arena-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-rose-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Status Awal</label>
+            <select id="custom-match-status" class="w-full bg-arena-bg border border-arena-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-rose-500">
+              <option value="UPCOMING">UPCOMING</option>
+              <option value="LIVE">LIVE NOW</option>
+              <option value="FINAL">FINAL</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-end gap-2 mt-6">
+        <button onclick="closeCustomMatchModal()" class="px-4 py-2 rounded-xl bg-arena-elevated text-xs font-semibold text-slate-300">Batal</button>
+        <button onclick="createCustomMatch()" class="px-4 py-2 rounded-xl bg-rose-500 hover:bg-rose-400 text-white text-xs font-extrabold">Tambah</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Share Spectator-Only Link & QR Code -->
+  <div id="share-spectator-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-arena-card border border-emerald-500/40 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-5">
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[10px] font-extrabold uppercase tracking-wider mb-1.5">
+            VIEW-ONLY • TIADA AKSES UBAH SKOR
+          </span>
+          <h3 class="font-display font-bold text-xl text-white">Kongsi Pautan Pengurus & Penonton</h3>
+          <p class="text-xs text-slate-400 mt-0.5">Pengurus pasukan Perempuan B16 boleh melihat skor & kedudukan secara langsung tanpa boleh mengubah keputusan.</p>
+        </div>
+        <button onclick="closeShareModal()" class="text-slate-400 hover:text-white p-1 rounded-lg bg-arena-elevated">✕</button>
+      </div>
+
+      <!-- Scannable QR Code -->
+      <div class="flex flex-col items-center justify-center bg-arena-bg border border-arena-border rounded-2xl p-4">
+        <div id="spectator-qr-box" class="bg-white p-3 rounded-xl shadow-lg"></div>
+        <span class="text-[11px] text-slate-400 mt-2.5 font-medium">Imbas kod QR di Gelanggang SPEEDY untuk paparan langsung</span>
+      </div>
+
+      <!-- Spectator URL Input & Copy Button -->
+      <div class="space-y-2">
+        <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400">Pautan Spectator Sahaja (?view=spectator)</label>
+        <div class="flex items-center gap-2">
+          <input id="spectator-share-url-input" type="text" readonly
+            class="flex-1 bg-arena-bg border border-arena-border rounded-xl px-3 py-2.5 text-xs font-mono text-emerald-300 focus:outline-none select-all" />
+          <button onclick="copySpectatorUrl()"
+            class="px-4 py-2.5 rounded-xl bg-rose-500 hover:bg-rose-400 text-white text-xs font-extrabold shrink-0 transition">
+            Copy Link
+          </button>
+        </div>
+      </div>
+
+      <!-- WhatsApp Share Shortcut -->
+      <div class="flex flex-col sm:flex-row gap-2 pt-1">
+        <a id="whatsapp-share-link" href="#" target="_blank" rel="noopener noreferrer"
+          class="flex-1 py-2.5 px-4 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-slate-950 text-xs font-extrabold text-center shadow-lg transition flex items-center justify-center gap-2">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824z"/></svg>
+          <span>Kongsi ke WhatsApp Pengurus</span>
+        </a>
+        <button onclick="closeShareModal()" class="py-2.5 px-4 rounded-xl bg-arena-elevated hover:bg-slate-700 text-xs font-bold text-slate-300">
+          Tutup
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Set / Verify Organizer PIN -->
+  <div id="organizer-pin-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden items-center justify-center p-4">
+    <div class="bg-arena-card border border-rose-500/40 rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+        </div>
+        <div>
+          <h3 id="pin-modal-title" class="font-display font-bold text-lg text-white">Keselamatan Organizer PIN</h3>
+          <p id="pin-modal-desc" class="text-xs text-slate-400">Tetapkan PIN 4-digit untuk mengunci mod Organizer.</p>
+        </div>
+      </div>
+
+      <div>
+        <input id="organizer-pin-input" type="password" inputmode="numeric" maxlength="6" placeholder="Masukkan PIN (cth: 2026)"
+          onkeydown="if(event.key==='Enter') submitPinModal()"
+          class="w-full bg-arena-bg border border-arena-border rounded-xl px-4 py-3 text-center font-mono text-lg font-extrabold tracking-widest text-white focus:outline-none focus:border-rose-500" />
+        <p id="pin-modal-error" class="hidden text-xs text-rose-400 font-semibold mt-1.5 text-center">PIN salah. Sila cuba lagi.</p>
+      </div>
+
+      <div id="pin-modal-actions" class="flex flex-wrap justify-end gap-2 pt-1">
+        <!-- Buttons injected dynamically depending on Set vs Unlock mode -->
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // =========================================================================
+    // 1. ISOLATED PEREMPUAN B16 ROOM ID, LOCKED SPECTATOR & FIREBASE SYNC SETUP
+    // =========================================================================
+    const urlParams = new URLSearchParams(window.location.search);
+    const isLockedSpectator =
+      urlParams.get('view') === 'spectator' ||
+      window.location.hash.toLowerCase() === '#spectator';
+
+    const DEFAULT_ROOM_ID = 'mss_hilir_perak_2026_perempuan_u16';
+    const roomParam = (urlParams.get('room') || DEFAULT_ROOM_ID)
+      .replace(/[^a-zA-Z0-9_-]/g, '');
+    const ROOM_ID = roomParam || DEFAULT_ROOM_ID;
+    const STORAGE_KEY = `mss_hilir_perak_2026_P16_${ROOM_ID}`;
+    const PIN_SESSION_KEY = `mss_pin_unlocked_${ROOM_ID}`;
+
+    const JERSEY_SWATCHES = [
+      '#EC4899', // Magenta Pink (P1 SUWA)
+      '#EF4444', // Crimson Red (P2 SMJK SAN MIN)
+      '#8B5CF6', // Royal Purple (P3 SMK CONVENT)
+      '#F59E0B', // Amber Gold (P4 BAGAN)
+      '#10B981', // Emerald Green
+      '#3B82F6', // Royal Blue
+      '#06B6D4', // Cyan
+      '#F97316'  // Orange
+    ];
+
+    const STATUS_CYCLE = ['UPCOMING', 'LIVE', 'FINAL'];
+
+    let db = null;
+    let auth = null;
+    let currentUser = null;
+    let tournamentDocRef = null;
+    let isCloudConnected = false;
+    let isApplyingRemoteSnapshot = false;
+    let pinModalMode = 'set'; // 'set' | 'unlock'
+
+    let state = {
+      title: 'PROGRAM PEMBANGUNAN BOLA KERANJANG MSS HILIR PERAK 2026',
+      venue: 'PEREMPUAN BAWAH 16 TAHUN • KUMPULAN P • 24/11/2026 • GLG. SPEEDY',
+      viewMode: isLockedSpectator ? 'spectator' : 'organizer',
+      pointsRule: 'fiba',    // 'fiba' (2/1), 'standard' (2/0), 'three' (3/1)
+      statusFilter: 'ALL',   // 'ALL' | 'LIVE' | 'UPCOMING' | 'FINAL'
+      rosterOpen: false,
+      organizerPin: '',      // Optional PIN to guard Organizer access
+      teams: [],
+      matches: []
+    };
+
+    /**
+     * Builds the exact 6 official round-robin matches (Bil. 1 to 6) for Perempuan Bawah 16 Tahun
+     * on 24/11/2026 at Glg. SPEEDY from 08:00 to 13:00 (no back-to-back games).
+     */
+    function buildOfficialP16Matches() {
+      return [
+        { id: 'p_bil_1', bil: 1, time: '08:00', court: 'Glg. SPEEDY', homeId: 'P1', awayId: 'P2', homeScore: 0, awayScore: 0, status: 'UPCOMING', isCustom: false },
+        { id: 'p_bil_2', bil: 2, time: '09:00', court: 'Glg. SPEEDY', homeId: 'P3', awayId: 'P4', homeScore: 0, awayScore: 0, status: 'UPCOMING', isCustom: false },
+        { id: 'p_bil_3', bil: 3, time: '10:00', court: 'Glg. SPEEDY', homeId: 'P1', awayId: 'P3', homeScore: 0, awayScore: 0, status: 'UPCOMING', isCustom: false },
+        { id: 'p_bil_4', bil: 4, time: '11:00', court: 'Glg. SPEEDY', homeId: 'P2', awayId: 'P4', homeScore: 0, awayScore: 0, status: 'UPCOMING', isCustom: false },
+        { id: 'p_bil_5', bil: 5, time: '12:00', court: 'Glg. SPEEDY', homeId: 'P1', awayId: 'P4', homeScore: 0, awayScore: 0, status: 'UPCOMING', isCustom: false },
+        { id: 'p_bil_6', bil: 6, time: '13:00', court: 'Glg. SPEEDY', homeId: 'P2', awayId: 'P3', homeScore: 0, awayScore: 0, status: 'UPCOMING', isCustom: false }
+      ];
+    }
+
+    function createOfficialState() {
+      const officialTeams = [
+        { id: 'P1', code: 'P1', name: 'SUWA',         color: '#EC4899' },
+        { id: 'P2', code: 'P2', name: 'SMJK SAN MIN', color: '#EF4444' },
+        { id: 'P3', code: 'P3', name: 'SMK CONVENT',  color: '#8B5CF6' },
+        { id: 'P4', code: 'P4', name: 'BAGAN',        color: '#F59E0B' }
+      ];
+
+      return {
+        title: 'PROGRAM PEMBANGUNAN BOLA KERANJANG MSS HILIR PERAK 2026',
+        venue: 'PEREMPUAN BAWAH 16 TAHUN • KUMPULAN P • 24/11/2026 • GLG. SPEEDY',
+        viewMode: isLockedSpectator ? 'spectator' : (state.viewMode || 'organizer'),
+        pointsRule: 'fiba',
+        statusFilter: state.statusFilter || 'ALL',
+        rosterOpen: false,
+        organizerPin: state.organizerPin || '',
+        teams: officialTeams,
+        matches: buildOfficialP16Matches()
+      };
+    }
+
+    function updateSyncBadge(mode) {
+      const badge = document.getElementById('sync-status-badge');
+      if (!badge) return;
+      if (mode === 'synced') {
+        badge.className = 'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/40 text-emerald-400 font-mono text-[11px] font-extrabold';
+        badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-live-dot"></span> LIVE SYNCED';
+      } else {
+        badge.className = 'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 font-mono text-[11px] font-bold';
+        badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> LOCAL MODE';
+      }
+    }
+
+    function loadLocalFallbackState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && Array.isArray(parsed.teams) && parsed.teams.length === 4 && Array.isArray(parsed.matches)) {
+            state = {
+              ...state,
+              ...parsed,
+              viewMode: isLockedSpectator ? 'spectator' : (parsed.viewMode || 'organizer')
+            };
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn('Could not load local state:', err);
+      }
+      state = createOfficialState();
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (err) {
+        console.warn('Local cache write skipped:', err);
+      }
+
+      if (!isLockedSpectator && !isApplyingRemoteSnapshot && db && currentUser && tournamentDocRef) {
+        const payload = {
+          title: state.title,
+          venue: state.venue,
+          pointsRule: state.pointsRule,
+          organizerPin: state.organizerPin || '',
+          teams: state.teams,
+          matches: state.matches,
+          updatedAt: Date.now()
+        };
+        setDoc(tournamentDocRef, payload, { merge: true }).catch(err => {
+          console.error('Firestore sync write failed:', err);
+          updateSyncBadge('local');
+        });
+      }
+    }
+
+    async function initCloudSync() {
+      loadLocalFallbackState();
+      renderAll();
+
+      try {
+        if (typeof __firebase_config === 'undefined' || !__firebase_config) {
+          updateSyncBadge('local');
+          checkOrganizerPinGate();
+          return;
+        }
+
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const app = initializeApp(firebaseConfig);
+        auth = getAuth(app);
+        db = getFirestore(app);
+
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+          await signInWithCustomToken(auth, __initial_auth_token);
+        } else {
+          await signInAnonymously(auth);
+        }
+        currentUser = auth.currentUser;
+        if (!currentUser) {
+          updateSyncBadge('local');
+          checkOrganizerPinGate();
+          return;
+        }
+
+        // Isolated public artifact path for Perempuan U16:
+        // /artifacts/{appId}/public/data/tournaments/mss_hilir_perak_2026_perempuan_u16
+        tournamentDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'tournaments', ROOM_ID);
+
+        if (!isLockedSpectator) {
+          const snap = await getDoc(tournamentDocRef);
+          if (!snap.exists()) {
+            await setDoc(tournamentDocRef, {
+              title: state.title,
+              venue: state.venue,
+              pointsRule: state.pointsRule,
+              organizerPin: state.organizerPin || '',
+              teams: state.teams,
+              matches: state.matches,
+              updatedAt: Date.now()
+            });
+          }
+        }
+
+        onSnapshot(
+          tournamentDocRef,
+          (snapshot) => {
+            isCloudConnected = true;
+            updateSyncBadge('synced');
+            if (!snapshot.exists()) return;
+
+            const data = snapshot.data();
+            isApplyingRemoteSnapshot = true;
+            try {
+              if (data.title) state.title = data.title;
+              if (data.venue) state.venue = data.venue;
+              if (data.pointsRule) state.pointsRule = data.pointsRule;
+              if (typeof data.organizerPin === 'string') state.organizerPin = data.organizerPin;
+              if (Array.isArray(data.teams) && data.teams.length === 4) state.teams = data.teams;
+              if (Array.isArray(data.matches)) state.matches = data.matches;
+              if (isLockedSpectator) state.viewMode = 'spectator';
+
+              try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+              } catch (_) {}
+
+              const updatedEl = document.getElementById('last-updated-label');
+              if (updatedEl) {
+                const now = new Date();
+                updatedEl.textContent = `Dikemaskini: ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`;
+              }
+
+              renderAll();
+              checkOrganizerPinGate();
+            } finally {
+              isApplyingRemoteSnapshot = false;
+            }
+          },
+          (error) => {
+            console.error('Firestore onSnapshot error:', error);
+            isCloudConnected = false;
+            updateSyncBadge('local');
+            checkOrganizerPinGate();
+          }
+        );
+      } catch (err) {
+        console.warn('Cloud sync unavailable, running in local mode:', err);
+        updateSyncBadge('local');
+        checkOrganizerPinGate();
+      }
+    }
+
+    async function manualRefreshSync() {
+      if (!db || !currentUser || !tournamentDocRef) {
+        loadLocalFallbackState();
+        renderAll();
+        showToast('Paparan dikemaskini');
+        return;
+      }
+      try {
+        const snap = await getDoc(tournamentDocRef);
+        if (snap.exists()) {
+          const data = snap.data();
+          if (data.title) state.title = data.title;
+          if (data.venue) state.venue = data.venue;
+          if (data.pointsRule) state.pointsRule = data.pointsRule;
+          if (Array.isArray(data.teams) && data.teams.length === 4) state.teams = data.teams;
+          if (Array.isArray(data.matches)) state.matches = data.matches;
+          renderAll();
+        }
+        showToast('Keputusan & kedudukan terkini dimuatkan');
+      } catch (err) {
+        showToast('Gagal menyegarkan pautan');
+      }
+    }
+
+    // =========================================================================
+    // 2. REAL-TIME 4-TEAM STANDINGS & TIE-BREAKER ENGINE
+    // =========================================================================
+    function getPointsConfig() {
+      if (state.pointsRule === 'standard') return { win: 2, loss: 0, draw: 1 };
+      if (state.pointsRule === 'three') return { win: 3, loss: 1, draw: 2 };
+      return { win: 2, loss: 1, draw: 1 }; // FIBA default
+    }
+
+    function computeLeagueStandings() {
+      const cfg = getPointsConfig();
+      const map = {};
+
+      state.teams.forEach(team => {
+        map[team.id] = {
+          team,
+          gp: 0,
+          w: 0,
+          l: 0,
+          pf: 0,   // Total Marks Scored (Points For)
+          pa: 0,   // Total Marks Against (Points Against)
+          diff: 0, // PF - PA
+          pts: 0
+        };
+      });
+
+      // Include both LIVE and FINAL games in standings
+      const countedMatches = state.matches.filter(
+        m => m.status === 'LIVE' || m.status === 'FINAL'
+      );
+
+      countedMatches.forEach(m => {
+        const h = map[m.homeId];
+        const a = map[m.awayId];
+        if (!h || !a) return;
+
+        const hScore = Number(m.homeScore) || 0;
+        const aScore = Number(m.awayScore) || 0;
+
+        h.gp += 1;
+        a.gp += 1;
+
+        h.pf += hScore;
+        h.pa += aScore;
+
+        a.pf += aScore;
+        a.pa += hScore;
+
+        if (hScore > aScore) {
+          h.w += 1;
+          h.pts += cfg.win;
+          a.l += 1;
+          a.pts += cfg.loss;
+        } else if (aScore > hScore) {
+          a.w += 1;
+          a.pts += cfg.win;
+          h.l += 1;
+          h.pts += cfg.loss;
+        } else {
+          // Tied live score
+          h.pts += cfg.draw;
+          a.pts += cfg.draw;
+        }
+      });
+
+      const rows = Object.values(map).map(row => ({
+        ...row,
+        diff: row.pf - row.pa
+      }));
+
+      // Helper for 2-team head-to-head tie-breaker
+      function getHeadToHeadWinner(teamAId, teamBId) {
+        let aH2HPts = 0;
+        let bH2HPts = 0;
+        let aH2HDiff = 0;
+        countedMatches.forEach(m => {
+          if (m.homeId === teamAId && m.awayId === teamBId) {
+            if (m.homeScore > m.awayScore) aH2HPts += 1;
+            else if (m.awayScore > m.homeScore) bH2HPts += 1;
+            aH2HDiff += (m.homeScore - m.awayScore);
+          } else if (m.homeId === teamBId && m.awayId === teamAId) {
+            if (m.homeScore > m.awayScore) bH2HPts += 1;
+            else if (m.awayScore > m.homeScore) aH2HPts += 1;
+            aH2HDiff += (m.awayScore - m.homeScore);
+          }
+        });
+        if (aH2HPts !== bH2HPts) return bH2HPts - aH2HPts;
+        if (aH2HDiff !== 0) return -aH2HDiff;
+        return 0;
+      }
+
+      // Sort: 1) PTS, 2) DIFF, 3) PF, 4) Head-to-Head, 5) Team Code (P1..P4)
+      rows.sort((a, b) => {
+        if (b.pts !== a.pts) return b.pts - a.pts;
+        if (b.diff !== a.diff) return b.diff - a.diff;
+        if (b.pf !== a.pf) return b.pf - a.pf;
+        const h2h = getHeadToHeadWinner(a.team.id, b.team.id);
+        if (h2h !== 0) return h2h;
+        return a.team.code.localeCompare(b.team.code);
+      });
+
+      return rows;
+    }
+
+    // =========================================================================
+    // 3. TEAM ROSTER & MATCH SCORE ACTIONS
+    // =========================================================================
+    function canEdit() {
+      if (isLockedSpectator) return false;
+      if (state.organizerPin && sessionStorage.getItem(PIN_SESSION_KEY) !== state.organizerPin) {
+        openPinModal('unlock');
+        return false;
+      }
+      return true;
+    }
+
+    function toggleRosterEditor() {
+      if (!canEdit()) return;
+      state.rosterOpen = !state.rosterOpen;
+      renderRosterEditor();
+    }
+
+    function updateTeamField(teamId, field, value) {
+      if (!canEdit()) return;
+      const team = state.teams.find(t => t.id === teamId);
+      if (!team) return;
+
+      if (field === 'name') {
+        const clean = value.trim().toUpperCase();
+        if (!clean) return;
+        team.name = clean;
+      } else if (field === 'code') {
+        const cleanCode = value.trim().toUpperCase().slice(0, 4);
+        if (cleanCode) team.code = cleanCode;
+      } else if (field === 'color') {
+        team.color = value;
+      }
+
+      saveState();
+      renderStandingsTable();
+      renderChronologicalSchedule();
+      if (field !== 'color') renderRosterEditor();
+    }
+
+    function adjustScore(matchId, side, delta) {
+      if (!canEdit()) return;
+      const match = state.matches.find(m => m.id === matchId);
+      if (!match) return;
+
+      // Auto-flip UPCOMING match to LIVE when points are added
+      if (match.status === 'UPCOMING' && delta > 0) {
+        match.status = 'LIVE';
+      }
+
+      if (side === 'home') {
+        match.homeScore = Math.max(0, (Number(match.homeScore) || 0) + delta);
+      } else {
+        match.awayScore = Math.max(0, (Number(match.awayScore) || 0) + delta);
+      }
+
+      saveState();
+      renderAll();
+    }
+
+    function setDirectScore(matchId, side, rawVal) {
+      if (!canEdit()) return;
+      const match = state.matches.find(m => m.id === matchId);
+      if (!match) return;
+
+      const parsed = Math.max(0, parseInt(rawVal, 10) || 0);
+      if (side === 'home') match.homeScore = parsed;
+      else match.awayScore = parsed;
+
+      if (match.status === 'UPCOMING' && parsed > 0) {
+        match.status = 'LIVE';
+      }
+
+      saveState();
+      renderAll();
+    }
+
+    function cycleMatchStatus(matchId) {
+      if (!canEdit()) return;
+      const match = state.matches.find(m => m.id === matchId);
+      if (!match) return;
+      const nextIdx = (STATUS_CYCLE.indexOf(match.status) + 1) % STATUS_CYCLE.length;
+      match.status = STATUS_CYCLE[nextIdx];
+      saveState();
+      renderAll();
+    }
+
+    function updateMatchMeta(matchId, field, val) {
+      if (!canEdit()) return;
+      const match = state.matches.find(m => m.id === matchId);
+      if (!match) return;
+      if (val.trim()) match[field] = val.trim();
+      saveState();
+    }
+
+    function deleteCustomMatch(matchId) {
+      if (!canEdit()) return;
+      state.matches = state.matches.filter(m => m.id !== matchId);
+      saveState();
+      renderAll();
+      showToast('Perlawanan tambahan dipadam');
+    }
+
+    function openCustomMatchModal() {
+      if (!canEdit()) return;
+      const homeSel = document.getElementById('custom-match-home');
+      const awaySel = document.getElementById('custom-match-away');
+      const opts = state.teams.map(t => `<option value="${t.id}">${t.code} • ${t.name}</option>`).join('');
+      homeSel.innerHTML = opts;
+      awaySel.innerHTML = opts;
+      awaySel.selectedIndex = 1;
+
+      const modal = document.getElementById('custom-match-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeCustomMatchModal() {
+      const modal = document.getElementById('custom-match-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function createCustomMatch() {
+      const homeId = document.getElementById('custom-match-home').value;
+      const awayId = document.getElementById('custom-match-away').value;
+      const rawCourt = document.getElementById('custom-match-court').value.trim() || '14:00 • Glg. SPEEDY';
+      const status = document.getElementById('custom-match-status').value;
+
+      if (!homeId || !awayId || homeId === awayId) {
+        showToast('Sila pilih dua pasukan yang berbeza');
+        return;
+      }
+
+      const parts = rawCourt.split('•').map(s => s.trim());
+      const time = parts[0] || '14:00';
+      const court = parts[1] || 'Glg. SPEEDY';
+      const nextBil = state.matches.length + 1;
+
+      state.matches.push({
+        id: 'p_custom_' + Date.now(),
+        bil: nextBil,
+        time,
+        court,
+        homeId,
+        awayId,
+        homeScore: 0,
+        awayScore: 0,
+        status,
+        isCustom: true
+      });
+
+      saveState();
+      closeCustomMatchModal();
+      renderAll();
+      showToast(`Ditambah Bil. ${nextBil}`);
+    }
+
+    // =========================================================================
+    // 4. UI RENDERING
+    // =========================================================================
+    function renderAll() {
+      document.getElementById('league-title-input').value = state.title;
+      document.getElementById('league-venue-input').value = state.venue;
+      document.getElementById('points-rule-select').value = state.pointsRule;
+
+      const liveCount = state.matches.filter(m => m.status === 'LIVE').length;
+      const finalCount = state.matches.filter(m => m.status === 'FINAL').length;
+      document.getElementById('league-summary-badge').textContent =
+        `24/11/2026 • Glg. SPEEDY • ${state.matches.length} Perlawanan (${liveCount} Live, ${finalCount} Tamat)`;
+
+      const pinBtnText = document.getElementById('organizer-pin-btn-text');
+      if (pinBtnText) {
+        pinBtnText.textContent = state.organizerPin ? `PIN Aktif (${state.organizerPin})` : 'Set Organizer PIN';
+      }
+
+      renderRosterEditor();
+      renderStandingsTable();
+      renderStatusFilters();
+      renderChronologicalSchedule();
+      applyViewMode();
+    }
+
+    function renderRosterEditor() {
+      const panel = document.getElementById('roster-editor-panel');
+      if (state.viewMode === 'spectator' || !state.rosterOpen) {
+        panel.classList.add('hidden');
+        return;
+      }
+      panel.classList.remove('hidden');
+
+      const grid = document.getElementById('roster-editor-grid');
+      grid.innerHTML = state.teams.map((team, idx) => `
+        <div class="bg-arena-bg border border-arena-border rounded-xl p-3 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold uppercase text-slate-400">Pasukan ${idx + 1}</span>
+            <span class="px-2 py-0.5 rounded-md font-mono font-bold text-xs text-white"
+              style="background-color: ${team.color}">
+              ${team.code}
+            </span>
+          </div>
+          <div class="flex gap-1.5">
+            <input type="text" maxlength="4" value="${team.code}"
+              onchange="updateTeamField('${team.id}', 'code', this.value)"
+              placeholder="Kod"
+              title="Kod Pasukan (cth: P1)"
+              class="w-14 bg-arena-card border border-arena-border rounded-lg px-1.5 py-1.5 text-center font-mono text-xs font-bold text-rose-400 uppercase focus:outline-none focus:border-rose-500" />
+            <input type="text" value="${team.name}"
+              onchange="updateTeamField('${team.id}', 'name', this.value)"
+              placeholder="Nama Sekolah"
+              class="flex-1 min-w-0 bg-arena-card border border-arena-border rounded-lg px-2.5 py-1.5 text-xs font-bold text-white uppercase focus:outline-none focus:border-rose-500" />
+          </div>
+          <div class="flex items-center justify-between gap-1 pt-0.5">
+            ${JERSEY_SWATCHES.map(hex => `
+              <button type="button" onclick="updateTeamField('${team.id}', 'color', '${hex}')"
+                class="w-4 h-4 rounded-full transition transform hover:scale-125 ${team.color === hex ? 'ring-2 ring-white scale-110' : 'opacity-70'}"
+                style="background-color: ${hex};"></button>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderStandingsTable() {
+      const tbody = document.getElementById('standings-tbody');
+      const rows = computeLeagueStandings();
+
+      tbody.innerHTML = rows.map((row, idx) => {
+        const pos = idx + 1;
+        const isTopTwo = pos <= 2 && row.gp > 0;
+        const isFirst = pos === 1 && row.gp > 0;
+        const diffText = row.diff > 0 ? `+${row.diff}` : `${row.diff}`;
+        const diffColor = row.diff > 0
+          ? 'text-emerald-400'
+          : row.diff < 0
+            ? 'text-rose-400'
+            : 'text-slate-400';
+
+        return `
+          <tr class="transition hover:bg-arena-elevated/45 ${isFirst ? 'bg-amber-500/[0.06]' : isTopTwo ? 'bg-rose-500/[0.04]' : ''}">
+            <!-- POS -->
+            <td class="py-3.5 pl-4 pr-2 text-center font-mono font-bold relative">
+              ${isFirst ? '<span class="absolute left-0 top-1.5 bottom-1.5 w-1 bg-amber-400 rounded-r"></span>' : isTopTwo ? '<span class="absolute left-0 top-1.5 bottom-1.5 w-1 bg-rose-400 rounded-r"></span>' : ''}
+              ${isFirst ? `
+                <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-amber-500/20 border border-amber-500/45 text-amber-400 text-xs font-extrabold">
+                  1
+                </span>
+              ` : isTopTwo ? `
+                <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-rose-500/20 border border-rose-500/45 text-rose-300 text-xs font-extrabold">
+                  2
+                </span>
+              ` : `
+                <span class="text-slate-400 text-sm">${pos}</span>
+              `}
+            </td>
+
+            <!-- CODE (P1-P4) -->
+            <td class="py-3.5 px-2.5 text-center">
+              <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-lg font-mono font-extrabold text-xs text-white shadow-sm"
+                style="background-color: ${row.team.color}">
+                ${row.team.code}
+              </span>
+            </td>
+
+            <!-- SEKOLAH / TEAM NAME -->
+            <td class="py-3.5 px-3">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <div class="font-display font-bold text-base sm:text-lg text-white tracking-wide uppercase truncate">
+                  ${row.team.name}
+                </div>
+                ${isFirst ? `
+                  <span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded bg-amber-500/15 border border-amber-500/35 text-[10px] font-extrabold uppercase tracking-wider text-amber-400 shrink-0">
+                    #1 PENDATANG / JOHAN
+                  </span>
+                ` : isTopTwo ? `
+                  <span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded bg-rose-500/15 border border-rose-500/35 text-[10px] font-extrabold uppercase tracking-wider text-rose-300 shrink-0">
+                    #2 PODIUM
+                  </span>
+                ` : ''}
+              </div>
+            </td>
+
+            <!-- GP -->
+            <td class="py-3.5 px-3 text-center font-mono text-sm text-slate-300 tabular-nums">${row.gp}</td>
+
+            <!-- W -->
+            <td class="py-3.5 px-3 text-center font-mono text-sm font-bold text-emerald-400 tabular-nums">${row.w}</td>
+
+            <!-- L -->
+            <td class="py-3.5 px-3 text-center font-mono text-sm text-slate-400 tabular-nums">${row.l}</td>
+
+            <!-- PF (Total Marks Scored) -->
+            <td class="py-3.5 px-3 text-center font-mono text-sm font-bold text-white tabular-nums">${row.pf}</td>
+
+            <!-- PA (Total Marks Against) -->
+            <td class="py-3.5 px-3 text-center font-mono text-sm text-slate-300 tabular-nums">${row.pa}</td>
+
+            <!-- DIFF -->
+            <td class="py-3.5 px-3 text-center font-mono text-sm font-bold tabular-nums ${diffColor}">${diffText}</td>
+
+            <!-- PTS -->
+            <td class="py-3.5 px-4 text-center font-mono font-extrabold text-lg sm:text-xl text-amber-400 tabular-nums">
+              ${row.pts}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderStatusFilters() {
+      const container = document.getElementById('status-filter-pills');
+      const total = state.matches.length;
+      const live = state.matches.filter(m => m.status === 'LIVE').length;
+      const upcoming = state.matches.filter(m => m.status === 'UPCOMING').length;
+      const final = state.matches.filter(m => m.status === 'FINAL').length;
+
+      const filters = [
+        { key: 'ALL', label: `SEMUA (${total})` },
+        { key: 'LIVE', label: `LIVE (${live})` },
+        { key: 'UPCOMING', label: `AKAN DATANG (${upcoming})` },
+        { key: 'FINAL', label: `TAMAT (${final})` }
+      ];
+
+      container.innerHTML = filters.map(f => {
+        const active = state.statusFilter === f.key;
+        return `
+          <button onclick="setStatusFilter('${f.key}')"
+            class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+              active
+                ? 'bg-rose-500 text-white shadow'
+                : 'text-slate-400 hover:text-white'
+            }">
+            ${f.label}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function renderChronologicalSchedule() {
+      const container = document.getElementById('matches-container');
+      const filteredMatches = state.matches
+        .filter(m => state.statusFilter === 'ALL' || m.status === state.statusFilter)
+        .sort((a, b) => a.bil - b.bil);
+
+      if (filteredMatches.length === 0) {
+        container.innerHTML = `
+          <div class="bg-arena-card border border-arena-border rounded-2xl p-8 text-center text-sm text-slate-400">
+            Tiada perlawanan dengan status <strong>${state.statusFilter}</strong>.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          ${filteredMatches.map(match => renderMatchCard(match)).join('')}
+        </div>
+      `;
+
+      applyViewMode();
+    }
+
+    function renderMatchCard(match) {
+      const home = state.teams.find(t => t.id === match.homeId) || { code: 'P?', name: 'TBD', color: '#475569' };
+      const away = state.teams.find(t => t.id === match.awayId) || { code: 'P?', name: 'TBD', color: '#475569' };
+
+      const hScore = Number(match.homeScore) || 0;
+      const aScore = Number(match.awayScore) || 0;
+      const isLive = match.status === 'LIVE';
+      const isFinal = match.status === 'FINAL';
+
+      const homeLeading = (isLive || isFinal) && hScore > aScore;
+      const awayLeading = (isLive || isFinal) && aScore > hScore;
+
+      let statusBadge = '';
+      if (isLive) {
+        statusBadge = `
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/40 text-emerald-400 text-[11px] font-extrabold uppercase tracking-wider">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-live-dot"></span>
+            LIVE
+          </span>
+        `;
+      } else if (isFinal) {
+        statusBadge = `
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-slate-800 border border-slate-600 text-slate-300 text-[11px] font-extrabold uppercase tracking-wider">
+            FINAL
+          </span>
+        `;
+      } else {
+        statusBadge = `
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-rose-500/15 border border-rose-500/35 text-rose-300 text-[11px] font-extrabold uppercase tracking-wider">
+            UPCOMING
+          </span>
+        `;
+      }
+
+      return `
+        <div class="bg-arena-card rounded-2xl border ${isLive ? 'border-emerald-500/60 shadow-lg shadow-emerald-950/25' : 'border-arena-border'} p-4 flex flex-col justify-between gap-3 transition">
+          <!-- Top Bar: Bil., Masa, Kump. P, Glg. SPEEDY & Status Toggle -->
+          <div class="flex flex-wrap items-center justify-between gap-2 text-xs">
+            <div class="flex flex-wrap items-center gap-1.5 min-w-0">
+              <span class="px-2 py-0.5 rounded-md bg-rose-500/15 border border-rose-500/35 text-rose-300 font-mono font-extrabold text-[11px] shrink-0">
+                Bil. ${match.bil}
+              </span>
+              <input type="text" value="${match.time || ''}"
+                onchange="updateMatchMeta('${match.id}', 'time', this.value)"
+                ${state.viewMode === 'spectator' ? 'readonly' : ''}
+                title="Masa Perlawanan"
+                class="w-14 bg-arena-elevated/80 border border-arena-border/60 rounded px-1.5 py-0.5 text-center font-mono font-bold text-slate-200 text-[11px] focus:outline-none focus:border-rose-500" />
+              <span class="px-1.5 py-0.5 rounded bg-slate-800 text-rose-300 font-mono font-bold text-[10px]">
+                Kump. P
+              </span>
+              <input type="text" value="${match.court || 'Glg. SPEEDY'}"
+                onchange="updateMatchMeta('${match.id}', 'court', this.value)"
+                ${state.viewMode === 'spectator' ? 'readonly' : ''}
+                title="Gelanggang"
+                class="w-24 bg-transparent text-slate-400 font-semibold text-[11px] focus:text-white focus:outline-none truncate" />
+            </div>
+
+            <div class="flex items-center gap-2 shrink-0">
+              <button onclick="cycleMatchStatus('${match.id}')"
+                ${state.viewMode === 'spectator' ? 'disabled' : ''}
+                title="Klik untuk tukar status: UPCOMING → LIVE → FINAL"
+                class="${state.viewMode === 'organizer' ? 'cursor-pointer hover:opacity-85' : 'cursor-default'} transition">
+                ${statusBadge}
+              </button>
+              ${match.isCustom ? `
+                <button onclick="deleteCustomMatch('${match.id}')" title="Padam Perlawanan"
+                  class="organizer-only text-slate-500 hover:text-rose-400 text-xs px-1">✕</button>
+              ` : ''}
+            </div>
+          </div>
+
+          <!-- Scoreboard Rows -->
+          <div class="space-y-2">
+            <!-- Pasukan 1 Row -->
+            <div class="flex items-center justify-between gap-3 bg-arena-bg/80 rounded-xl px-3.5 py-2.5 border ${homeLeading ? 'border-emerald-500/40' : 'border-arena-border/70'}">
+              <div class="flex items-center gap-3 min-w-0">
+                <span class="px-2.5 py-1 rounded-lg font-mono font-extrabold text-xs text-white shrink-0 shadow"
+                  style="background-color: ${home.color}">
+                  ${home.code}
+                </span>
+                <div class="flex items-center gap-2 min-w-0">
+                  <span class="font-display font-bold text-base sm:text-lg uppercase tracking-wide truncate ${homeLeading ? 'text-white' : 'text-slate-200'}">
+                    ${home.name}
+                  </span>
+                  ${homeLeading ? '<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0" title="Mendahului"></span>' : ''}
+                </div>
+              </div>
+
+              <input type="number" min="0" value="${hScore}"
+                onchange="setDirectScore('${match.id}', 'home', this.value)"
+                ${state.viewMode === 'spectator' ? 'readonly' : ''}
+                class="w-14 bg-arena-card border border-arena-border rounded-xl py-1 text-center font-mono font-extrabold text-2xl tabular-nums ${homeLeading ? 'text-emerald-400' : 'text-white'} focus:outline-none focus:border-rose-500" />
+            </div>
+
+            <!-- Pasukan 2 Row -->
+            <div class="flex items-center justify-between gap-3 bg-arena-bg/80 rounded-xl px-3.5 py-2.5 border ${awayLeading ? 'border-emerald-500/40' : 'border-arena-border/70'}">
+              <div class="flex items-center gap-3 min-w-0">
+                <span class="px-2.5 py-1 rounded-lg font-mono font-extrabold text-xs text-white shrink-0 shadow"
+                  style="background-color: ${away.color}">
+                  ${away.code}
+                </span>
+                <div class="flex items-center gap-2 min-w-0">
+                  <span class="font-display font-bold text-base sm:text-lg uppercase tracking-wide truncate ${awayLeading ? 'text-white' : 'text-slate-200'}">
+                    ${away.name}
+                  </span>
+                  ${awayLeading ? '<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0" title="Mendahului"></span>' : ''}
+                </div>
+              </div>
+
+              <input type="number" min="0" value="${aScore}"
+                onchange="setDirectScore('${match.id}', 'away', this.value)"
+                ${state.viewMode === 'spectator' ? 'readonly' : ''}
+                class="w-14 bg-arena-card border border-arena-border rounded-xl py-1 text-center font-mono font-extrabold text-2xl tabular-nums ${awayLeading ? 'text-emerald-400' : 'text-white'} focus:outline-none focus:border-rose-500" />
+            </div>
+          </div>
+
+          <!-- Organizer Quick-Score Controls -->
+          <div class="organizer-only grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-arena-border/70">
+            <!-- Pasukan 1 Quick Buttons -->
+            <div class="flex items-center justify-between gap-1.5 bg-arena-bg/60 px-2.5 py-1.5 rounded-xl border border-arena-border/50">
+              <span class="text-[11px] font-mono font-bold text-slate-300">${home.code}</span>
+              <div class="flex items-center gap-1">
+                <button onclick="adjustScore('${match.id}', 'home', 1)" class="px-2 py-1 rounded-lg bg-arena-elevated hover:bg-emerald-500/25 font-mono text-xs font-bold text-emerald-400 transition">+1</button>
+                <button onclick="adjustScore('${match.id}', 'home', 2)" class="px-2 py-1 rounded-lg bg-arena-elevated hover:bg-emerald-500/25 font-mono text-xs font-bold text-emerald-400 transition">+2</button>
+                <button onclick="adjustScore('${match.id}', 'home', 3)" class="px-2 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/35 font-mono text-xs font-bold text-amber-400 transition">+3</button>
+                <button onclick="adjustScore('${match.id}', 'home', -1)" class="px-2 py-1 rounded-lg bg-arena-elevated hover:bg-rose-500/25 font-mono text-xs font-bold text-rose-400 transition">-1</button>
+              </div>
+            </div>
+
+            <!-- Pasukan 2 Quick Buttons -->
+            <div class="flex items-center justify-between gap-1.5 bg-arena-bg/60 px-2.5 py-1.5 rounded-xl border border-arena-border/50">
+              <span class="text-[11px] font-mono font-bold text-slate-300">${away.code}</span>
+              <div class="flex items-center gap-1">
+                <button onclick="adjustScore('${match.id}', 'away', 1)" class="px-2 py-1 rounded-lg bg-arena-elevated hover:bg-emerald-500/25 font-mono text-xs font-bold text-emerald-400 transition">+1</button>
+                <button onclick="adjustScore('${match.id}', 'away', 2)" class="px-2 py-1 rounded-lg bg-arena-elevated hover:bg-emerald-500/25 font-mono text-xs font-bold text-emerald-400 transition">+2</button>
+                <button onclick="adjustScore('${match.id}', 'away', 3)" class="px-2 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/35 font-mono text-xs font-bold text-amber-400 transition">+3</button>
+                <button onclick="adjustScore('${match.id}', 'away', -1)" class="px-2 py-1 rounded-lg bg-arena-elevated hover:bg-rose-500/25 font-mono text-xs font-bold text-rose-400 transition">-1</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // =========================================================================
+    // 5. NAVIGATION, MODES, SHARE MODAL, ORGANIZER PIN & CSV EXPORT
+    // =========================================================================
+    function getSpectatorShareUrl() {
+      const shareUrl = new URL(window.location.href);
+      shareUrl.hash = '';
+      shareUrl.searchParams.set('view', 'spectator');
+      if (ROOM_ID !== DEFAULT_ROOM_ID) {
+        shareUrl.searchParams.set('room', ROOM_ID);
+      }
+      return shareUrl.toString();
+    }
+
+    function openShareModal() {
+      if (isLockedSpectator) return;
+      const spectatorUrl = getSpectatorShareUrl();
+      const inputEl = document.getElementById('spectator-share-url-input');
+      inputEl.value = spectatorUrl;
+
+      const waText = encodeURIComponent(
+        `Live Score & Kedudukan Liga - Bola Keranjang MSS Hilir Perak 2026 (Perempuan B16): ${spectatorUrl}`
+      );
+      document.getElementById('whatsapp-share-link').href = `https://wa.me/?text=${waText}`;
+
+      const qrBox = document.getElementById('spectator-qr-box');
+      qrBox.innerHTML = '';
+      if (typeof QRCode !== 'undefined') {
+        new QRCode(qrBox, {
+          text: spectatorUrl,
+          width: 164,
+          height: 164,
+          colorDark: '#090b12',
+          colorLight: '#ffffff',
+          correctLevel: QRCode.CorrectLevel.M
+        });
+      }
+
+      const modal = document.getElementById('share-spectator-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeShareModal() {
+      const modal = document.getElementById('share-spectator-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function copySpectatorUrl() {
+      const inputEl = document.getElementById('spectator-share-url-input');
+      inputEl.focus();
+      inputEl.select();
+      inputEl.setSelectionRange(0, 99999);
+      try {
+        document.execCommand('copy');
+        showToast('Pautan Spectator Perempuan B16 disalin! Sedia untuk dikongsi ke pengurus.');
+      } catch (err) {
+        showToast('Sila salin pautan dari kotak di atas.');
+      }
+    }
+
+    function checkOrganizerPinGate() {
+      if (isLockedSpectator) return;
+      if (state.organizerPin && sessionStorage.getItem(PIN_SESSION_KEY) !== state.organizerPin) {
+        openPinModal('unlock');
+      }
+    }
+
+    function openPinModal(mode = 'set') {
+      if (isLockedSpectator) return;
+      pinModalMode = mode;
+      const modal = document.getElementById('organizer-pin-modal');
+      const titleEl = document.getElementById('pin-modal-title');
+      const descEl = document.getElementById('pin-modal-desc');
+      const inputEl = document.getElementById('organizer-pin-input');
+      const errEl = document.getElementById('pin-modal-error');
+      const actionsEl = document.getElementById('pin-modal-actions');
+
+      errEl.classList.add('hidden');
+      inputEl.value = '';
+
+      if (mode === 'unlock') {
+        titleEl.textContent = 'Masukkan Organizer PIN';
+        descEl.textContent = 'Mod Organizer dikunci. Masukkan PIN untuk mengurus skor atau buka pautan Spectator.';
+        actionsEl.innerHTML = `
+          <button onclick="switchToLockedSpectatorUrl()" class="px-3.5 py-2 rounded-xl bg-arena-elevated hover:bg-slate-700 text-xs font-bold text-emerald-400">
+            Buka View-Only
+          </button>
+          <button onclick="submitPinModal()" class="px-4 py-2 rounded-xl bg-rose-500 hover:bg-rose-400 text-white text-xs font-extrabold">
+            Buka Kunci
+          </button>
+        `;
+      } else {
+        titleEl.textContent = 'Tetapkan Organizer PIN';
+        descEl.textContent = 'Jika seseorang membuang ?view=spectator daripada pautan, PIN ini diperlukan untuk mengubah skor.';
+        actionsEl.innerHTML = `
+          ${state.organizerPin ? `
+            <button onclick="clearOrganizerPin()" class="px-3 py-2 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-xs font-bold">
+              Padam PIN
+            </button>
+          ` : ''}
+          <button onclick="closePinModal()" class="px-3.5 py-2 rounded-xl bg-arena-elevated text-xs font-semibold text-slate-300">
+            Batal
+          </button>
+          <button onclick="submitPinModal()" class="px-4 py-2 rounded-xl bg-rose-500 hover:bg-rose-400 text-white text-xs font-extrabold">
+            Simpan PIN
+          </button>
+        `;
+      }
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      setTimeout(() => inputEl.focus(), 50);
+    }
+
+    function closePinModal() {
+      const modal = document.getElementById('organizer-pin-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function submitPinModal() {
+      const inputEl = document.getElementById('organizer-pin-input');
+      const errEl = document.getElementById('pin-modal-error');
+      const val = inputEl.value.trim();
+
+      if (pinModalMode === 'unlock') {
+        if (val === state.organizerPin) {
+          sessionStorage.setItem(PIN_SESSION_KEY, val);
+          closePinModal();
+          showToast('Akses Organizer dibuka');
+        } else {
+          errEl.classList.remove('hidden');
+          inputEl.value = '';
+          inputEl.focus();
+        }
+      } else {
+        if (val.length < 4) {
+          errEl.textContent = 'Sila masukkan sekurang-kurangnya 4 aksara/nombor.';
+          errEl.classList.remove('hidden');
+          return;
+        }
+        state.organizerPin = val;
+        sessionStorage.setItem(PIN_SESSION_KEY, val);
+        saveState();
+        closePinModal();
+        renderAll();
+        showToast('Organizer PIN disimpan');
+      }
+    }
+
+    function clearOrganizerPin() {
+      state.organizerPin = '';
+      sessionStorage.removeItem(PIN_SESSION_KEY);
+      saveState();
+      closePinModal();
+      renderAll();
+      showToast('Organizer PIN dipadam');
+    }
+
+    function switchToLockedSpectatorUrl() {
+      window.location.href = getSpectatorShareUrl();
+    }
+
+    function updateMeta(key, val) {
+      if (!canEdit()) return;
+      if (!val.trim()) return;
+      state[key] = val.trim();
+      saveState();
+    }
+
+    function updatePointsRule(rule) {
+      if (!canEdit()) return;
+      state.pointsRule = rule;
+      saveState();
+      renderStandingsTable();
+      showToast('Sistem mata liga dikemaskini');
+    }
+
+    function setStatusFilter(status) {
+      state.statusFilter = status;
+      renderStatusFilters();
+      renderChronologicalSchedule();
+    }
+
+    function setViewMode(mode) {
+      if (isLockedSpectator) {
+        state.viewMode = 'spectator';
+      } else {
+        state.viewMode = mode;
+      }
+      renderAll();
+    }
+
+    function applyViewMode() {
+      const isSpectator = isLockedSpectator || state.viewMode === 'spectator';
+      document.querySelectorAll('.organizer-only').forEach(el => {
+        el.classList.toggle('hidden', isSpectator);
+      });
+
+      const titleInput = document.getElementById('league-title-input');
+      const venueInput = document.getElementById('league-venue-input');
+      if (titleInput) titleInput.readOnly = isSpectator;
+      if (venueInput) venueInput.readOnly = isSpectator;
+
+      const lockedBanner = document.getElementById('locked-spectator-banner');
+      const previewBanner = document.getElementById('preview-spectator-banner');
+      const headerControls = document.getElementById('header-controls-area');
+
+      if (isLockedSpectator) {
+        lockedBanner.classList.remove('hidden');
+        previewBanner.classList.add('hidden');
+        headerControls.classList.add('hidden');
+      } else {
+        lockedBanner.classList.add('hidden');
+        headerControls.classList.remove('hidden');
+        previewBanner.classList.toggle('hidden', state.viewMode !== 'spectator');
+      }
+
+      if (!isSpectator && state.rosterOpen) {
+        document.getElementById('roster-editor-panel').classList.remove('hidden');
+      }
+
+      const orgBtn = document.getElementById('mode-btn-organizer');
+      const specBtn = document.getElementById('mode-btn-spectator');
+
+      if (isSpectator) {
+        specBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-extrabold bg-rose-500 text-white shadow transition';
+        orgBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition';
+      } else {
+        orgBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-extrabold bg-rose-500 text-white shadow transition';
+        specBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition';
+      }
+    }
+
+    function resetAllScores() {
+      if (!canEdit()) return;
+      state.matches.forEach(m => {
+        m.homeScore = 0;
+        m.awayScore = 0;
+        m.status = 'UPCOMING';
+      });
+      saveState();
+      renderAll();
+      showToast('Semua keputusan ditetapkan semula ke 0–0 (UPCOMING)');
+    }
+
+    function loadOfficialSchedule() {
+      if (!canEdit()) return;
+      state = createOfficialState();
+      saveState();
+      renderAll();
+      showToast('Jadual Rasmi MSS Hilir Perak 2026 (Perempuan Bawah 16) dimuat semula');
+    }
+
+    function exportLeagueCSV() {
+      const standings = computeLeagueStandings();
+      const rows = [
+        ['Kejohanan', state.title],
+        ['Maklumat', state.venue],
+        [],
+        ['POS', 'CODE', 'SEKOLAH', 'GP', 'W', 'L', 'PF', 'PA', 'DIFF', 'PTS']
+      ];
+
+      standings.forEach((s, idx) => {
+        rows.push([idx + 1, s.team.code, s.team.name, s.gp, s.w, s.l, s.pf, s.pa, s.diff, s.pts]);
+      });
+
+      rows.push([]);
+      rows.push(['JADUAL & KEPUTUSAN PERLAWANAN (24/11/2026)']);
+      rows.push(['Bil.', 'Masa', 'Kump.', 'Glg.', 'Kod 1', 'Pasukan 1', 'Skor 1', 'Skor 2', 'Kod 2', 'Pasukan 2', 'Status']);
+
+      state.matches
+        .slice()
+        .sort((a, b) => a.bil - b.bil)
+        .forEach(m => {
+          const home = state.teams.find(t => t.id === m.homeId) || { code: '', name: '' };
+          const away = state.teams.find(t => t.id === m.awayId) || { code: '', name: '' };
+          rows.push([m.bil, m.time, 'P', m.court, home.code, home.name, m.homeScore, m.awayScore, away.code, away.name, m.status]);
+        });
+
+      const csv = rows.map(r => r.map(c => `"${String(c ?? '').replace(/"/g, '""')}"`).join(',')).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'MSS_Hilir_Perak_2026_Perempuan_Bawah_16.csv';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('CSV Kedudukan & Keputusan Perempuan B16 berjaya dieksport');
+    }
+
+    function showToast(msg) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'bg-arena-elevated border border-rose-500/45 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-xl transition-opacity duration-300';
+      toast.textContent = msg;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 2400);
+    }
+
+    // =========================================================================
+    // 6. EXPOSE WINDOW HANDLERS & INITIALIZATION
+    // =========================================================================
+    Object.assign(window, {
+      toggleRosterEditor,
+      updateTeamField,
+      adjustScore,
+      setDirectScore,
+      cycleMatchStatus,
+      updateMatchMeta,
+      deleteCustomMatch,
+      openCustomMatchModal,
+      closeCustomMatchModal,
+      createCustomMatch,
+      openShareModal,
+      closeShareModal,
+      copySpectatorUrl,
+      openPinModal,
+      closePinModal,
+      submitPinModal,
+      clearOrganizerPin,
+      switchToLockedSpectatorUrl,
+      manualRefreshSync,
+      updateMeta,
+      updatePointsRule,
+      setStatusFilter,
+      setViewMode,
+      resetAllScores,
+      loadOfficialSchedule,
+      exportLeagueCSV
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initCloudSync();
+    });
+  </script>
+</body>
+</html>
